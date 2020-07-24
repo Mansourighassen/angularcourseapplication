@@ -1,16 +1,27 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Dish } from "../shared/dish";
-
+import { Params, ActivatedRoute } from "@angular/router";
+import { Location } from "@angular/common";
+import { DishService } from "../services/dish.service";
 @Component({
   selector: "app-dishdetails",
   templateUrl: "./dishdetails.component.html",
   styleUrls: ["./dishdetails.component.scss"],
 })
 export class DishdetailsComponent implements OnInit {
-  @Input()
   dish: Dish;
 
-  constructor() {}
+  constructor(
+    private dishService: DishService,
+    private location: Location,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    let id = this.route.snapshot.params["id"];
+    this.dish = this.dishService.gitDish(id);
+  }
+  goBack(): void {
+    this.location.back();
+  }
 }
