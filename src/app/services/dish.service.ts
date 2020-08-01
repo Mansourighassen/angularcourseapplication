@@ -6,15 +6,16 @@ import { DISHES } from "../shared/dishes";
   providedIn: "root",
 })
 export class DishService {
-  getDishes(): Dish[] {
-    return DISHES;
+  getDishes(): Promise<Dish[]> {
+    return Promise.resolve(DISHES);
   }
 
-  gitDish(id: string): Dish {
-    return DISHES.filter((dish) => dish.id === id)[0];
+  getDish(id: string): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => dish.id === id)[0]);
   }
-  getFeaturedDish(): Dish {
-    return DISHES.filter((dish) => dish.featured)[0];
+
+  getFeaturedDish(): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => dish.featured)[0]);
   }
   constructor() {}
 }
