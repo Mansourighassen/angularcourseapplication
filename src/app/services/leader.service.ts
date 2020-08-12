@@ -1,34 +1,40 @@
 import { Injectable } from "@angular/core";
 import { Leader } from "../shared/leader";
 import { leaders } from "../shared/leaders";
+import { delay } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { baseURL } from "../shared/baseurl";
+import { ProcessHTTPMsgService } from "./process-httpmsg.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { map, catchError } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
 })
 export class LeaderService {
-  getLeaders(): Promise<Leader[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(leaders), 2000);
-    });
-  }
-  getLeader(id: string): Promise<Leader> {
-    return new Promise((resolve) => {
-      setTimeout(
-        () => resolve(leaders.filter((ader) => ader.id === id)[0]),
-        2000
-      );
-    });
+  getLeaders(): Observable<Leader[]> {
+    return this.http
+      .get<Leader[]>(baseURL + "leadership")
+      .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
-  getFeaturedLeader(): Promise<Leader> {
-    return new Promise((resolve) => {
-      // Simulate server latency with 2 second delay
-      setTimeout(
-        () => resolve(leaders.filter((Leader) => Leader.featured)[0]),
-        2000
-      );
-    });
+  getLeader(id: string): Observable<Leader> {
+    return this.http
+      .get<Leader>(baseURL + "leadership/" + id)
+      .pipe(catchError(this.processHTTPMsgService.handleError));
+    //return of(leaders.filter((ader) => ader.id === id)[0]).pipe(delay(2000));
   }
 
-  constructor() {}
+  getFeaturedLeader(): Observable<Leader> {
+    // return of(leaders.filter((leader) => leader.featured)[0]).pipe(delay(2000));
+    return this.http
+      .get<Leader[]>(baseURL + "leadership?featured=true")
+      .pipe(map((dishes) => dishes[0]))
+      .pipe(catchError(this.processHTTPMsgService.handleError));
+  }
+
+  constructor(
+    private http: HttpClient,
+    private processHTTPMsgService: ProcessHTTPMsgService
+  ) {}
 }

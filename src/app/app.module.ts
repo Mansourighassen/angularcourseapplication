@@ -31,6 +31,11 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSliderModule } from "@angular/material/slider";
+import { HttpModule } from "@angular/http";
+import { baseURL } from "./shared/baseurl";
+import { HttpClientModule } from "@angular/common/http";
+import { HighlightDirective } from './directives/highlight.directive';
 
 @NgModule({
   declarations: [
@@ -43,6 +48,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     HomeComponent,
     ContactComponent,
     LoginComponent,
+    HighlightDirective,
   ],
   imports: [
     MatDialogModule,
@@ -63,8 +69,16 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatSelectModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
+    MatSliderModule,
+    HttpModule,
+    HttpClientModule,
   ],
-  providers: [DishService, PromotionService, LeaderService],
+  providers: [
+    DishService,
+    PromotionService,
+    LeaderService,
+    { provide: "baseURL", useValue: baseURL },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent],
 })
